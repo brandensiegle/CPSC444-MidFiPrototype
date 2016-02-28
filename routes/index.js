@@ -78,7 +78,7 @@ module.exports = function(passport){
 
 	/*POST new user*/
 	router.post('/user', passport.authenticate('signup', {
-	    successRedirect: '/',
+	    successRedirect: '/admin',
 	    failureRedirect: '/admin',
 	    failureFlash : false 
 	}));

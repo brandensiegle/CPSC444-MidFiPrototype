@@ -10,7 +10,7 @@ function deleteUser(username){
 	var toRemove = username;
 	alert('here');
 	$.ajax({
-		url: '../user/'+toRemove,
+		url: '/user/'+toRemove,
 		error: function(jqXHR, textStatus, errorThrown){
 			alert(textStatus+': '+errorThrown);
 		},
