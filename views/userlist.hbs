@@ -1,0 +1,13 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+{{#if userlist}}
+	<p> Name: Age </p>
+	<p>
+{{/if}}
+{{#each userlist}}
+	<br> {{this.username}}: {{this.groupname}}
+{{/each}}
+{{#if userlist}}
+	</p>
+{{/if}}
