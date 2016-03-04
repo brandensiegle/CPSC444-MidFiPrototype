@@ -36,7 +36,7 @@ var db = mongoose.connection;
 //var db = monk('mongodb://brandensiegle:admin@ds017688.mlab.com:17688/cpsc444-midfi');
 
 var routes = require('./routes/index')(passport);
-var users = require('./routes/users');
+var users = require('./routes/user')(passport);
 var loggeddata = require('./routes/loggeddata');
 
 var app = express();

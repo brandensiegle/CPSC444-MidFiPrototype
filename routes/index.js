@@ -30,25 +30,25 @@ module.exports = function(passport){
 	    res.render('index', { title: req.user.username });
 	  });
 
-	/* GET Userlist page. */
-	router.get('/userlist', function(req, res) {
-	    var db = req.db;
-	    var collection = db.collection('users');
+	// /* GET Userlist page. */
+	// router.get('/userlist', function(req, res) {
+	//     var db = req.db;
+	//     var collection = db.collection('users');
 	    
-	    User.find({}, function (err, docs) {
-	    	res.render('userlist', {
-	            "userlist" : docs,
-	            title: "TheTitle"
-	        });
-	    });
+	//     User.find({}, function (err, docs) {
+	//     	res.render('userlist', {
+	//             "userlist" : docs,
+	//             title: "TheTitle"
+	//         });
+	//     });
 
-	    /*collection.find({},{},function(e,docs){
-	        res.render('userlist', {
-	            "userlist" : docs,
-	            title: "TheTitle"
-	        });
-	    });*/
-	});
+	//     /*collection.find({},{},function(e,docs){
+	//         res.render('userlist', {
+	//             "userlist" : docs,
+	//             title: "TheTitle"
+	//         });
+	//     });*/
+	// });
 
 	/*GET Login page*/
 	router.get('/login', function(req, res, next) {
@@ -87,40 +87,7 @@ module.exports = function(passport){
 	    });
 	});
 
-	/*POST new user*/
-	router.post('/user', passport.authenticate('signup', {
-	    successRedirect: '/group',
-	    failureRedirect: '/admin',
-	    failureFlash : false 
-	}));
 
-	/*DELETE User*/
-	router.delete('/user/:username', function(req, res){
-		var username = req.param("username");
-		console.log("delete: "+username);
-		
-		User.find({username:username}, function(err, user){
-			
-			
-			Group.find({groupname: user[0].groupname}, function(err, group){
-				var usersgroup = group[0];
-
-				if(usersgroup.numbermembers == 1){
-					usersgroup.remove();
-				} else{
-					usersgroup.numbermembers = usersgroup.numbermembers - 1;
-					usersgroup.save();
-				}
-
-			});
-
-			
-
-
-		}).remove().exec();
-
-		res.end(username);
-	});
 
 
 /*GET groupranking page*/
