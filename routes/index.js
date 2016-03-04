@@ -3,6 +3,9 @@ var passport = require('passport');
 var Strategy = require('passport-http').BasicStrategy;
 var ensureLoggedIn = require('connect-ensure-login');
 var User = require('../models/user');
+var Group = require('../models/group');
+var EntryData = require('../models/entrydata');
+
 var express = require('express');
 var router = express.Router();
 
@@ -14,6 +17,7 @@ var isAuthenticated = function (req, res, next) {
 	if (req.isAuthenticated())
 		return next();
 	// if the user is not authenticated then redirect him to the login page
+	//return next();
 	res.redirect('/login');
 }
 
@@ -56,11 +60,18 @@ module.exports = function(passport){
 
 	/*POST to Login*/
 	router.post('/login', passport.authenticate('login', {
-			successRedirect: '/',
+			successRedirect: '/group',
 			failureRedirect: '/login',
 			failureFlash : false  
 		
 	}));
+
+	/*GET logout */
+	router.get('/logout', isAuthenticated, function(req, res){
+		req.session.destroy(function (err) {
+   			res.redirect('/'); //Inside a callback… bulletproof!
+  		});
+	});
 
 
 	/*GET admin page*/
@@ -78,7 +89,7 @@ module.exports = function(passport){
 
 	/*POST new user*/
 	router.post('/user', passport.authenticate('signup', {
-	    successRedirect: '/admin',
+	    successRedirect: '/group',
 	    failureRedirect: '/admin',
 	    failureFlash : false 
 	}));
@@ -88,10 +99,140 @@ module.exports = function(passport){
 		var username = req.param("username");
 		console.log("delete: "+username);
 		
-		User.find({username:username}).remove().exec();
+		User.find({username:username}, function(err, user){
+			
+			
+			Group.find({groupname: user[0].groupname}, function(err, group){
+				var usersgroup = group[0];
+
+				if(usersgroup.numbermembers == 1){
+					usersgroup.remove();
+				} else{
+					usersgroup.numbermembers = usersgroup.numbermembers - 1;
+					usersgroup.save();
+				}
+
+			});
+
+			
+
+
+		}).remove().exec();
 
 		res.end(username);
 	});
+
+
+/*GET groupranking page*/
+router.get('/groupranking', isAuthenticated, function(req, res, next){
+
+	res.render('groupranking');
+});
+
+/*GET groups page*/
+router.get('/group', isAuthenticated, function(req, res, next){
+	
+	var todayDate = new Date();
+	var yy = todayDate.getFullYear();
+	var mm = todayDate.getMonth();
+	var dd = todayDate.getDate();
+
+	var today = new Date(yy, mm, dd)
+
+	//var username = 'test';
+	var username = req.user.username;
+
+	User.findOne({username: username}, function(err, currentUser){
+		User.find({groupname: currentUser.groupname}, function(err, groupmates){
+
+			console.log(groupmates);
+			EntryData.find({date: today}, function(err, entriesForToday){
+
+				var memberData = [];
+				var totalSteps = 0;
+
+				for(var i=0; i<groupmates.length; i++){
+					var user = groupmates[i].username;
+
+					var logged = false;
+					for(var j=0; j<entriesForToday.length; j++){
+						
+						if (entriesForToday[j].username == user){
+							memberData.push({username : entriesForToday[j].username,
+											 steps: entriesForToday[j].steps});
+
+							
+							totalSteps = totalSteps + entriesForToday[j].steps;
+							logged = true;
+						}
+					}
+					if (!logged){
+						memberData.push({username : groupmates[i].username,
+											 steps: 0});
+					}
+				}
+
+				Group.findOne({groupname: currentUser.groupname}, function(err, thisGroup){
+					
+
+					res.render('group', {members: memberData,
+											groupTotal: totalSteps,
+											groupGoal: thisGroup.goal,
+											groupName:  thisGroup.groupname});
+
+				});
+
+
+				
+				
+			});
+
+			
+		});
+
+	});
+
+	
+
+});
+
+/*GET adddata page*/
+router.get('/addData', isAuthenticated, function(req, res, next){
+
+	res.render('adddata');
+});
+
+
+/*POST new data*/
+router.post('/addData', isAuthenticated, function(req, res, next){
+	
+	//var username = 'test';
+	var username = req.user.username;
+
+	var todayDate = new Date();
+	var yy = todayDate.getFullYear();
+	var mm = todayDate.getMonth();
+	var dd = todayDate.getDate();
+
+	var today = new Date(yy, mm, dd)
+
+	EntryData.findOne({username: username, date: today}, function(err, entry){
+		if(entry){
+			entry.steps = req.body.steps;
+			entry.save();
+
+		} else {
+			var newentry = new EntryData();
+			newentry.username = username;
+			newentry.date = today;
+			newentry.steps = req.body.steps;
+			newentry.save();
+		}
+	});
+
+
+	res.redirect('/group');
+});
 
 	return router;
 }

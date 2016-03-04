@@ -1,0 +1,77 @@
+<head>
+<title>Groups</title>
+
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!--
+	Top Navigation Bar
+-->
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<ul class="nav nav-pills navbar-left">
+			<li role="presentation" class="active"><a href="#">SquadGoals</a></li>
+		</ul>
+
+		<ul class="nav nav-pills navbar-right">
+			<li role="presentation" class="active"><a href="/logout">Logout</a></li>
+			<li role="presentation" class="active"><a href="/addData">Add Data</a></li>
+		</ul>
+
+	</div>
+
+</nav>
+
+<!--
+	Group Progress
+-->
+
+
+<div class="panel panel-info">
+	<div class="panel-heading">
+    Group Progress
+    
+    </div>
+
+  	<div class="panel-body">
+  		<span class="badge">{{groupTotal}}</span>
+  		/
+    	<span class="badge">{{groupGoal}} Steps</span>
+    </div>
+</div>
+
+<!--
+	List of user steps
+-->
+
+<ul class="list-group">
+	{{#each members}}
+	<li class="list-group-item">
+		<span class="badge"> Steps {{this.steps}}</span>
+		<span class="glyphicon glyphicon-arrow-up"></span>   {{this.username}}
+	</li>
+	{{/each}}
+</ul>
+
+<!-- 
+	Bottom Bar
+ -->
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<ul class="nav nav-pills">
+			<li role="presentation" class="active"><a href="#">Profile</a></li>
+			<li role="presentation" class="active"><a href="/group">My Squad</a></li>
+			<li role="presentation" class="active"><a href="#">Dashboard</a></li>
+			<li role="presentation" class="active"><a href="/groupranking">Squad Rank</a></li>
+			<li role="presentation" class="active"><a href="#">Settings</a></li>
+		</ul>
+
+	</div>
+
+</nav>
+
+</body>

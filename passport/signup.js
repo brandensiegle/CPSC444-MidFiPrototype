@@ -1,5 +1,6 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var User = require('../models/user');
+var Group = require('../models/group');
 var bCrypt = require('bcrypt-nodejs');
 
 module.exports = function(passport){
@@ -46,13 +47,54 @@ module.exports = function(passport){
                             newUser.memberblind = false
                         }
 
+                        Group.findOne({ 'groupname' : newUser.groupname}, function(grerr, group){
+                            if(grerr){
+                                console.log('Error in SignUp: '+grerr);
+                                return done(grerr)
+                            }
+
+                            if (!group){
+                                var newGroup = new Group();
+
+                                newGroup.groupname = newUser.groupname;
+                                newGroup.goal = 0;
+                                newGroup.numbermembers = 1;
+
+                                newGroup.save(function(err) {
+                                    if (err){
+                                        console.log('Error in Saving user: '+err);  
+                                        throw err;
+                                    }
+
+
+                                });
+                            } else {
+                                console.log("~~~~~~~~~~~~");
+                                console.log(group.numbermembers);
+                                console.log(group.numbermembers + 1);
+                                group.numbermembers = group.numbermembers + 1;
+
+                                group.save(function(err){
+                                    if (err){
+                                        console.log('Error in Saving user: '+err);  
+                                        throw err;
+                                    }
+                                });
+                            }
+
+                        });
+
                         // save the user
                         newUser.save(function(err) {
                             if (err){
                                 console.log('Error in Saving user: '+err);  
                                 throw err;  
                             }
-                            console.log('User Registration succesful');    
+                            console.log('User Registration succesful');
+
+
+
+
                             return done(null, newUser);
                         });
                     }
