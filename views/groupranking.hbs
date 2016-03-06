@@ -1,1 +1,52 @@
-RANKING PAGE
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+<!--
+	Top Navigation Bar
+-->
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<ul class="nav nav-pills navbar-left">
+			<img src="/images/logo.jpg"></img>
+		</ul>
+
+		<ul class="nav nav-pills navbar-right">
+			<li role="presentation" class="active"><a href="/logout">Logout</a></li>
+			<li role="presentation" class="active"><a href="/addData">Add Data</a></li>
+		</ul>
+
+	</div>
+
+</nav>
+
+<!--
+	List of groups
+-->
+
+<ul class="list-group">
+	{{#each allgroups}}
+	<li class="list-group-item">
+		<span class="badge"> Total Steps {{this.totalSteps}}</span>
+		<span class="glyphicon glyphicon-arrow-up"></span>   {{this.groupname}}
+	</li>
+	{{/each}}
+</ul>
+
+<!-- 
+	Bottom Bar
+ -->
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<ul class="nav nav-pills">
+			<li role="presentation" class="active"><a href="#">Profile</a></li>
+			<li role="presentation" class="active"><a href="/group">My Squad</a></li>
+			<li role="presentation" class="active"><a href="#">Dashboard</a></li>
+			<li role="presentation" class="active"><a href="/groupranking">Squad Rank</a></li>
+			<li role="presentation" class="active"><a href="#">Settings</a></li>
+		</ul>
+
+	</div>
+
+</nav>
+
+</body>

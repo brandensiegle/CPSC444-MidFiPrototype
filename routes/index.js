@@ -82,7 +82,7 @@ module.exports = function(passport){
 	    User.find({}, function (err, docs) {
 	    	res.render('admin', {
 	            "userlist" : docs,
-	            title: "TheTitle"
+	            title: "Admin_Page"
 	        });
 	    });
 	});
@@ -92,8 +92,119 @@ module.exports = function(passport){
 
 /*GET groupranking page*/
 router.get('/groupranking', isAuthenticated, function(req, res, next){
+	//var username = "test";
 
-	res.render('groupranking');
+	var todayDate = new Date();
+	var yy = todayDate.getFullYear();
+	var mm = todayDate.getMonth();
+	var dd = todayDate.getDate();
+
+	var today = new Date(yy, mm, dd);
+	
+	EntryData.find({date: today}, function(err, entriesForToday){
+		
+		Group.find({}, function(err, allGroups){
+			var curGroup = 0;
+			var groupStats = [];
+			var data;
+
+			//Function for iterating through groups
+			function searchThroughGroups(){
+				if(curGroup < (allGroups.length - 1)){
+					
+
+					
+					var currentGroupName = allGroups[curGroup].groupname;
+					
+					
+					User.find({groupname: currentGroupName}, function(err, usersInThis){
+						var totalGroupSteps = 0;
+
+						
+						for (var userCounter = 0 ;userCounter < usersInThis.length; userCounter++) {
+							var u = usersInThis[userCounter];
+							console.log("-------------------------------------")
+							console.log(u);
+							
+							for(var i = 0; i < entriesForToday.length; i++){
+								var e = entriesForToday[i];
+
+								if(u.username == e.username){
+									console.log(e);
+									console.log(e.steps);
+									totalGroupSteps = totalGroupSteps + e.steps;
+									break;
+								}
+							}
+							
+						}
+
+						console.log(totalGroupSteps);
+
+						groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps});
+
+						
+
+						curGroup++;
+						searchThroughGroups();
+					});
+
+					
+					
+
+					
+				}
+				else{
+					var currentGroupName = allGroups[curGroup].groupname;
+
+					User.find({groupname: currentGroupName}, function(err, usersInThis){
+						//console.log(usersInThis);
+
+						var totalGroupSteps = 0;
+						
+
+						
+						for (var userCounter = 0;userCounter < usersInThis.length;userCounter++) {
+							var u = usersInThis[userCounter];
+							
+							console.log(u.username);
+
+							for(var i = 0; i < entriesForToday.length; i++){
+								var e = entriesForToday[i];
+
+								console.log(u.username + " : " + e.username);
+
+								if(u.username == e.username){
+									totalGroupSteps = totalGroupSteps + e.steps;
+									break;
+								}
+							}
+							
+						}
+
+						groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps});
+
+						
+
+						curGroup++;
+						res.render('groupranking', {allgroups: groupStats});
+					});
+
+				}
+
+			}
+
+			searchThroughGroups();
+			
+
+
+			
+
+		});
+	});
+
+
+	
 });
 
 /*GET groups page*/
@@ -104,7 +215,7 @@ router.get('/group', isAuthenticated, function(req, res, next){
 	var mm = todayDate.getMonth();
 	var dd = todayDate.getDate();
 
-	var today = new Date(yy, mm, dd)
+	var today = new Date(yy, mm, dd);
 
 	//var username = 'test';
 	var username = req.user.username;
@@ -196,6 +307,8 @@ router.post('/addData', isAuthenticated, function(req, res, next){
 			newentry.save();
 		}
 	});
+
+	
 
 
 	res.redirect('/group');
