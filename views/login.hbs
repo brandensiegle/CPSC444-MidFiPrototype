@@ -1,11 +1,14 @@
 <!doctype html>
+
 <html>
 
 <head>
 	<meta charset="utf-8">
-	<title>SquadGoals/Login</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="author" content="The Jaguar Squad">
-	<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+	<title>SquadGoals/Login</title>
+	
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -17,24 +20,25 @@
 </head>
 
 <body>
-	<div>
-		<img src="/images/logo.jpg"></img>
+	<div class="container">
+		<img src="/images/logo.jpg" class="img-responsive center-block"></img>
 	</div>
-	<form action="/login" method="post">
-		<div>
-			<label>Username:</label>
-			<input type="text" name="username"/><br/>
-		</div>
-		<div>
-			<label>Password:</label>
-			<input type="password" name="password"/>
-		</div>
-		<div>
-			<input type="submit" value="Submit"/>
-		</div>
-	</form>
-
-	<a href = "/register">Register</a>
+	<div class="container text-center">
+		<form action="/login" method="post">
+			<div>
+				<label>Username:</label>
+				<input type="text" name="username"/><br/>
+			</div>
+			<div>
+				<label>Password:</label>
+				<input type="password" name="password"/>
+			</div>
+			<div>
+				<input type="submit" value="Submit"/>
+			</div>
+		</form>
+		<a href = "/register">Register</a>
+	</div>
 </body>
 
 </html>
