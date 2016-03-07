@@ -353,8 +353,8 @@ router.get('/addData', isAuthenticated, function(req, res, next){
 /*POST new data*/
 router.post('/addData', isAuthenticated, function(req, res, next){
 	
-	var username = 'test';
-	//var username = req.user.username;
+	//var username = 'test';
+	var username = req.user.username;
 
 	var todayDate = new Date();
 	var yy = todayDate.getFullYear();
