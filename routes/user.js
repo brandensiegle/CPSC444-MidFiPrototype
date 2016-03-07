@@ -6,7 +6,7 @@ var Group = require('../models/group');
 var EntryData = require('../models/entrydata');
 
 var express = require('express');
-var router = express.Router();
+var userRouter = express.Router();
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -23,7 +23,7 @@ var isAuthenticated = function (req, res, next) {
 module.exports = function(passport){
 
 	/*POST new user*/
-	router.post('/', passport.authenticate('signup', {
+	userRouter.post('/', passport.authenticate('signup', {
 	    successRedirect: '/group',
 	    failureRedirect: '/admin',
 	    failureFlash : false 
@@ -31,7 +31,7 @@ module.exports = function(passport){
 
 
 	/*DELETE User*/
-	router.delete('/:username', function(req, res){
+	userRouter.delete('/:username', function(req, res){
 		var username = req.param("username");
 		console.log("delete: "+username);
 		
@@ -58,6 +58,6 @@ module.exports = function(passport){
 		res.end(username);
 	});
 
-	return router;
+	return userRouter;
 
 }

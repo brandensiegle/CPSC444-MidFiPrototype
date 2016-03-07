@@ -52,6 +52,7 @@ function deleteUser(username){
 
 <br><br>
 <!-- Register Users-->
+<h1>Add Users</h1>
 <form action="/user" method="post">
 	<div>
 	<label>Username:</label>
@@ -69,6 +70,11 @@ function deleteUser(username){
 	</div>
 
 	<div>
+	<label>Individual Daily Goal:</label>
+	<input type="text" name="indgoal" placeholder="ex. 10000"/><br/>
+	</div>
+
+	<div>
 	<label>Blind To Other Groups:</label>
 	<input type="checkbox" name="groupblind" value="true"/><br/>
 	</div>
@@ -82,3 +88,4 @@ function deleteUser(username){
 	<input type="submit" value="Submit"/>
 	</div>
 </form>
+

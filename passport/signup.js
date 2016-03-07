@@ -35,6 +35,7 @@ module.exports = function(passport){
                         // set the user's local credentials
                         newUser.username = username;
                         newUser.password = createHash(password);
+                        newUser.goal = req.param('indgoal');
                         newUser.groupname = req.param('groupname');
                         newUser.groupblind = req.param('groupblind');
                         newUser.memberblind = req.param('memberblind');

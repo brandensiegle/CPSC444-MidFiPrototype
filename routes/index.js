@@ -27,7 +27,7 @@ module.exports = function(passport){
 
 	/* GET home page. */
 	router.get('/', isAuthenticated, function(req, res){
-	    res.render('index', { title: req.user.username });
+	    res.redirect('/group');
 	  });
 
 	// /* GET Userlist page. */
@@ -69,22 +69,28 @@ module.exports = function(passport){
 	/*GET logout */
 	router.get('/logout', isAuthenticated, function(req, res){
 		req.session.destroy(function (err) {
-   			res.redirect('/'); //Inside a callback… bulletproof!
+   			res.redirect('/login'); //Inside a callback… bulletproof!
   		});
 	});
 
 
 	/*GET admin page*/
-	router.get('/admin', function(req, res){
+	router.get('/admin', isAuthenticated, function(req, res, next){
 		var db = req.db;
 	    var collection = db.collection('users');
 	    
-	    User.find({}, function (err, docs) {
-	    	res.render('admin', {
-	            "userlist" : docs,
-	            title: "Admin_Page"
-	        });
-	    });
+	    if (req.user.username == 'Admin'){
+
+		    User.find({}, function (err, docs) {
+		    	res.render('admin', {
+		            "userlist" : docs,
+		            title: "Admin_Page"
+		        });
+		    });
+
+		} else {
+			next();
+		}
 	});
 
 
@@ -94,12 +100,16 @@ module.exports = function(passport){
 router.get('/groupranking', isAuthenticated, function(req, res, next){
 	//var username = "test";
 
+	console.log(req.user);
+
 	var todayDate = new Date();
 	var yy = todayDate.getFullYear();
 	var mm = todayDate.getMonth();
 	var dd = todayDate.getDate();
 
 	var today = new Date(yy, mm, dd);
+
+	var thisGroupOnlyStats = [];
 	
 	EntryData.find({date: today}, function(err, entriesForToday){
 		
@@ -123,8 +133,7 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 						
 						for (var userCounter = 0 ;userCounter < usersInThis.length; userCounter++) {
 							var u = usersInThis[userCounter];
-							console.log("-------------------------------------")
-							console.log(u);
+							
 							
 							for(var i = 0; i < entriesForToday.length; i++){
 								var e = entriesForToday[i];
@@ -139,10 +148,13 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 							
 						}
 
-						console.log(totalGroupSteps);
 
-						groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps});
-
+						if(req.user.groupname == currentGroupName){
+							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+							thisGroupOnlyStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+						} else{
+							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: false});
+						}
 						
 
 						curGroup++;
@@ -167,12 +179,10 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 						for (var userCounter = 0;userCounter < usersInThis.length;userCounter++) {
 							var u = usersInThis[userCounter];
 							
-							console.log(u.username);
 
 							for(var i = 0; i < entriesForToday.length; i++){
 								var e = entriesForToday[i];
 
-								console.log(u.username + " : " + e.username);
 
 								if(u.username == e.username){
 									totalGroupSteps = totalGroupSteps + e.steps;
@@ -182,11 +192,22 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 							
 						}
 
-						groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps});
+						
 
+						if(req.user.groupname == currentGroupName){
+							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+							thisGroupOnlyStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+						} else{
+							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: false});
+						}
 						
 
 						curGroup++;
+
+						if(req.user.groupblind){
+							groupStats = thisGroupOnlyStats;
+						}
+
 						res.render('groupranking', {allgroups: groupStats});
 					});
 
@@ -226,6 +247,7 @@ router.get('/group', isAuthenticated, function(req, res, next){
 			console.log(groupmates);
 			EntryData.find({date: today}, function(err, entriesForToday){
 
+				var singleMember = [];
 				var memberData = [];
 				var totalSteps = 0;
 
@@ -236,27 +258,74 @@ router.get('/group', isAuthenticated, function(req, res, next){
 					for(var j=0; j<entriesForToday.length; j++){
 						
 						if (entriesForToday[j].username == user){
-							memberData.push({username : entriesForToday[j].username,
-											 steps: entriesForToday[j].steps});
+							
+							
 
+							if(currentUser.username == user){
+								singleMember.push({username : entriesForToday[j].username,
+											 steps: entriesForToday[j].steps,
+											 goal: groupmates[i].goal,
+											 percentage: (entriesForToday[j].steps/groupmates[i].goal)*100,
+											 offColour: true });
+
+								memberData.push({username : entriesForToday[j].username,
+											 steps: entriesForToday[j].steps,
+											 goal: groupmates[i].goal,
+											 percentage: (entriesForToday[j].steps/groupmates[i].goal)*100,
+											 offColour: true});
+							} else{
+								memberData.push({username : entriesForToday[j].username,
+											 steps: entriesForToday[j].steps,
+											 goal: groupmates[i].goal,
+											 percentage: (entriesForToday[j].steps/groupmates[i].goal)*100,
+											 offColour: false});
+							}
 							
 							totalSteps = totalSteps + entriesForToday[j].steps;
 							logged = true;
+							break;
 						}
 					}
 					if (!logged){
-						memberData.push({username : groupmates[i].username,
-											 steps: 0});
+						
+						if(currentUser.username == user){
+								singleMember.push({username :  groupmates[i].username,
+											 steps: 0,
+											 goal: groupmates[i].goal,
+											 percentage: 0,
+											 offColour: true });
+
+								memberData.push({username : groupmates[i].username,
+											 steps: 0,
+											 goal: groupmates[i].goal,
+											 percentage: 0,
+											 offColour: true});
+						} else {
+
+							memberData.push({username : groupmates[i].username,
+											 steps: 0,
+											 goal: groupmates[i].goal,
+											 percentage: 0,
+											 offColour: false});
+						}
 					}
 				}
 
 				Group.findOne({groupname: currentUser.groupname}, function(err, thisGroup){
 					
+					memberData.sort(function(a, b) {
+						return b.steps - a.steps;
+					});
+
+					if(currentUser.memberblind){
+						memberData = singleMember;
+					}
 
 					res.render('group', {members: memberData,
 											groupTotal: totalSteps,
 											groupGoal: thisGroup.goal,
-											groupName:  thisGroup.groupname});
+											groupName:  thisGroup.groupname,
+											otherVisible : !currentUser.memberblind});
 
 				});
 
@@ -284,8 +353,8 @@ router.get('/addData', isAuthenticated, function(req, res, next){
 /*POST new data*/
 router.post('/addData', isAuthenticated, function(req, res, next){
 	
-	//var username = 'test';
-	var username = req.user.username;
+	var username = 'test';
+	//var username = req.user.username;
 
 	var todayDate = new Date();
 	var yy = todayDate.getFullYear();
