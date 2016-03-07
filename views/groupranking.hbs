@@ -8,31 +8,25 @@
 
 <header class="navbar-default">
     <div id="divContainer" class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <nav class="col-xs-12 navbar-inverse navbar-fixed-top" role="navigation">
             <div id="divContainer" class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
-                            data-toggle="collapse" data-target="#navbarContent">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand navbar-left" href="#">
-                        <img alt="SquadGoals" src="https://s-media-cache-ak0.pinimg.com/avatars/aylishabutler-1428656284_30.jpg">
+                <div class="row" id="bottomNav">
+                    <div class="col-xs-3 text-center"><a href="#"><i class="glyphicon glyphicon-cog"></i><br>Settings</a></div>
+                    <div class="col-xs-6 text-center">	<img src="/images/logobrown.png" class="img-responsive center-block"></div>
+                    <div class="col-xs-3 text-center"><a href="/logout"><i class="glyphicon glyphicon-log-out"></i><br>Log Out</a></div>
 
-                    </a>
-                </div>
-                <div id="navbarContent" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Settings</a></li>
-                        <li role="presentation"><a href="/logout">Logout</a></li>
-                    </ul>
+
                 </div>
             </div>
         </nav>
+    </div>
 </header>
-
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h3>
+        Leaderboard
+        </h3>
+    </div>
 <ul class="list-group">
     {{#each allgroups}}
     <li class="list-group-item{{#if this.offColour}} active{{/if}}">
@@ -41,19 +35,18 @@
     </li>
     {{/each}}
 </ul>
-
+</div>
 <div id="divContainer" class="container">
 
-<nav class="navbar navbar-inverse navbar-fixed-bottom">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li><a href="#">Profile</a></li>
-            <li><a href="/group">My Squads</a></li>
-            <li><a href="#">Challenges</a></li>
-            <li class="active"><a href="/groupranking">Leaderboard</a></li>
-
-        </ul>
+    <div id="footer">
+        <div class="col-xs-12 navbar-inverse navbar-fixed-bottom">
+            <div class="row" id="bottomNav">
+                <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-user"></i><br>Profile</a></div>
+                <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-tasks"></i><br>Dashboard</a></div>
+                <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-star"></i><br>MySquads</a></div>
+                <div class="col-xs-3 text-center bg-info"><a href="/groupranking"><i class="glyphicon glyphicon-list-alt"></i><br>Leaderboard</a></div>
+            </div>
+        </div>
     </div>
-</nav>
 
 </div>

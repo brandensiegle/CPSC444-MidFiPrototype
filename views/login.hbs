@@ -22,24 +22,26 @@
 
 <body>
 	<div class="container">
-		<img src="/images/logo.jpg" class="img-responsive center-block"></img>
+		<img src="/images/logo.jpg" class="img-responsive center-block">
 
 	</div>
-	<div class="container text-center">
+    <br>
+    <div class="container text-center">
 		<form action="/login" method="post">
 			<div>
 				<label>Username:</label>
 				<input type="text" name="username" autofocus/><br/>
 			</div>
+            <br>
 			<div>
 				<label>Password:</label>
 				<input type="password" name="password"/>
 			</div>
-			<div>
-				<input type="submit" value="Submit"/>
-			</div>
-		</form>
-		<a href = "/register">Register</a>
+            <h3>
+            <input type="submit" class="btn btn-primary" value="Log In">
+            </h3>
+        </form>
+		<a href = "/register">Register for a new account</a>
 	</div>
 </body>
 
