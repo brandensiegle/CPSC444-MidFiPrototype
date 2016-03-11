@@ -241,6 +241,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 	//var username = 'test';
 	var username = req.user.username;
 
+	var groupGoal = 0;
+
 	User.findOne({username: username}, function(err, currentUser){
 		User.find({groupname: currentUser.groupname}, function(err, groupmates){
 
@@ -253,6 +255,10 @@ router.get('/group', isAuthenticated, function(req, res, next){
 
 				for(var i=0; i<groupmates.length; i++){
 					var user = groupmates[i].username;
+
+					groupGoal += groupmates[i].goal;
+
+
 
 					var logged = false;
 					for(var j=0; j<entriesForToday.length; j++){
@@ -273,6 +279,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 											 goal: groupmates[i].goal,
 											 percentage: (entriesForToday[j].steps/groupmates[i].goal)*100,
 											 offColour: true});
+
+
 							} else{
 								memberData.push({username : entriesForToday[j].username,
 											 steps: entriesForToday[j].steps,
@@ -309,6 +317,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 											 offColour: false});
 						}
 					}
+
+
 				}
 
 				Group.findOne({groupname: currentUser.groupname}, function(err, thisGroup){
@@ -323,8 +333,9 @@ router.get('/group', isAuthenticated, function(req, res, next){
 
 					res.render('group', {members: memberData,
 											groupTotal: totalSteps,
-											groupGoal: thisGroup.goal,
+											groupGoal: groupGoal,
 											groupName:  thisGroup.groupname,
+											groupPercentage: (totalSteps/groupGoal)*100,
 											otherVisible : !currentUser.memberblind});
 
 				});
