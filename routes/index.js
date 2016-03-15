@@ -231,12 +231,46 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 /*GET groups page*/
 router.get('/group', isAuthenticated, function(req, res, next){
 	
-	var todayDate = new Date();
-	var yy = todayDate.getFullYear();
-	var mm = todayDate.getMonth();
-	var dd = todayDate.getDate();
+	if (req._parsedUrl.query != null){
+		var query = (req._parsedUrl.query).split("=");
+		if(query[0] != "date"){
+			next();
+		}
 
-	var today = new Date(yy, mm, dd);
+		var splitDate = query[1].split("-");
+		var yy = splitDate[0];
+		var mm = splitDate[1];
+		var dd = splitDate[2];
+
+
+
+
+	} else {
+		var todayDate = new Date();
+
+
+		var yy = todayDate.getFullYear();
+		var mm = todayDate.getMonth();
+		var dd = todayDate.getDate();
+	}
+
+
+	var selectedDate = new Date(yy, mm, dd);
+
+	var prevDayDate = new Date();
+	prevDayDate.setDate(selectedDate.getDate() - 1);
+
+	var nextDayDate = new Date();
+	nextDayDate.setDate(selectedDate.getDate() + 1);
+
+	var prevDateStr = prevDayDate.getFullYear()+"-"+prevDayDate.getMonth()+"-"+prevDayDate.getDate();
+	var nextDateStr = nextDayDate.getFullYear()+"-"+nextDayDate.getMonth()+"-"+nextDayDate.getDate();
+
+
+	console.log("Date Requested: " + selectedDate);
+	console.log("Yestarday: " + prevDayDate);
+	console.log("Tomorrow: " + nextDayDate);
+	
 
 	//var username = 'test';
 	var username = req.user.username;
@@ -246,8 +280,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 	User.findOne({username: username}, function(err, currentUser){
 		User.find({groupname: currentUser.groupname}, function(err, groupmates){
 
-			console.log(groupmates);
-			EntryData.find({date: today}, function(err, entriesForToday){
+			//console.log(groupmates);
+			EntryData.find({date: selectedDate}, function(err, entriesForToday){
 
 				var singleMember = [];
 				var memberData = [];
@@ -336,7 +370,9 @@ router.get('/group', isAuthenticated, function(req, res, next){
 											groupGoal: groupGoal,
 											groupName:  thisGroup.groupname,
 											groupPercentage: (totalSteps/groupGoal)*100,
-											otherVisible : !currentUser.memberblind});
+											otherVisible : !currentUser.memberblind,
+											prevDate : prevDateStr,
+											nextDate : nextDateStr});
 
 				});
 

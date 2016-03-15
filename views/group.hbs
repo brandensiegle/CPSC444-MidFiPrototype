@@ -81,12 +81,20 @@
     </div>
 </div>
 <div class="text-center">
-    <ul><a href="/addData" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Update Steps</a></ul>
+    <ul>
+    <a href="/group?date={{prevDate}}">
+        <img src="/images/BackArrow.png" width="30"></img>
+    </a>
+    <a href="/addData" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Update Steps</a>
+    <a href="/group?date={{nextDate}}">
+        <img src="/images/NextArrow.png" width="30">
+    </a>
+    </ul>
 </div>
 
 
 	<!--List of user steps-->
-	<ul id="listOfUsers" class="list-group">
+ <ul id="listOfUsers" class="list-group">
 
 			{{#each members}}
 			<li class="list-group-item{{#if this.offColour}} active{{/if}}">

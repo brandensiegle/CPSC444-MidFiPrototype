@@ -1,7 +1,3 @@
-///<reference path='types\DefinitelyTyped\node\node.d.ts'/>
-///<reference path='types\DefinitelyTyped\express\express.d.ts'/>
-
-
 var flash = require('connect-flash');
 var express = require('express');
 var path = require('path');
@@ -9,8 +5,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-//var bootstrap = require('bootstrap');
 
 var passport = require('passport');
 var Strategy = require('passport-http').BasicStrategy;
@@ -33,7 +27,7 @@ var monk = require('monk');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://brandensiegle:admin@ds017688.mlab.com:17688/cpsc444-midfi')
 var db = mongoose.connection;
-//var db = monk('mongodb://brandensiegle:admin@ds017688.mlab.com:17688/cpsc444-midfi');
+
 
 var routes = require('./routes/index')(passport);
 var users = require('./routes/user')(passport);
@@ -50,7 +44,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(bootstrap);
 
 app.use(require('express-session')({ secret: 'NeverGonnaCatchMe', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
@@ -63,7 +56,6 @@ app.use(function(req,res,next){
 });
 
 app.use(function(req,res,next){
-    console.log("HERE");
     req.auth = passport;
     next();
 });
@@ -73,10 +65,12 @@ app.use('/user', users);
 app.use('/loggeddata',loggeddata);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err = new Error('Oh No! Not Found');
     err.status = 404;
     next(err);
 });
+
+
 // error handlers
 // development error handler
 // will print stacktrace
