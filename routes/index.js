@@ -265,6 +265,7 @@ router.get('/group', isAuthenticated, function(req, res, next){
 
 	var prevDateStr = prevDayDate.getFullYear()+"-"+prevDayDate.getMonth()+"-"+prevDayDate.getDate();
 	var nextDateStr = nextDayDate.getFullYear()+"-"+nextDayDate.getMonth()+"-"+nextDayDate.getDate();
+	var todayStr = selectedDate.getFullYear()+"-"+selectedDate.getMonth()+"-"+selectedDate.getDate();
 
 
 	console.log("Date Requested: " + selectedDate);
@@ -372,7 +373,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 											groupPercentage: (totalSteps/groupGoal)*100,
 											otherVisible : !currentUser.memberblind,
 											prevDate : prevDateStr,
-											nextDate : nextDateStr});
+											nextDate : nextDateStr,
+											todayDate: todayStr});
 
 				});
 
@@ -392,8 +394,23 @@ router.get('/group', isAuthenticated, function(req, res, next){
 
 /*GET adddata page*/
 router.get('/addData', isAuthenticated, function(req, res, next){
+	var addDate = "";
 
-	res.render('adddata');
+
+	var query = (req._parsedUrl.query).split("=");
+	if(query[0] != "date"){
+		next();
+	}
+
+	var splitDate = query[1].split("-");
+	var yy = splitDate[0];
+	var mm = splitDate[1];
+	var dd = splitDate[2];
+
+	addDate = yy+"-"+mm+"-"+dd;
+
+
+	res.render('adddata', {date:addDate});
 });
 
 
@@ -403,12 +420,21 @@ router.post('/addData', isAuthenticated, function(req, res, next){
 	//var username = 'test';
 	var username = req.user.username;
 
-	var todayDate = new Date();
-	var yy = todayDate.getFullYear();
-	var mm = todayDate.getMonth();
-	var dd = todayDate.getDate();
+	var query = (req._parsedUrl.query).split("=");
+	if(query[0] != "date"){
+		next();
+	}
+
+	var splitDate = query[1].split("-");
+	var yy = splitDate[0];
+	var mm = splitDate[1];
+	var dd = splitDate[2];
+
+	var todayString = yy+"-"+mm+"-"+dd;
 
 	var today = new Date(yy, mm, dd)
+
+
 
 	EntryData.findOne({username: username, date: today}, function(err, entry){
 		if(entry){
@@ -427,8 +453,70 @@ router.post('/addData', isAuthenticated, function(req, res, next){
 	
 
 
-	res.redirect('/group');
+	res.redirect('/group?date='+todayString);
 });
+
+	router.get('/profile', isAuthenticated, function(req, res, next){
+		var username = req.user.username;
+		var teamname = req.user.groupname;
+		var dayArray = []
+		var stepArray = []
+
+		var todayDate = new Date();
+		var yy = todayDate.getFullYear();
+		var mm = todayDate.getMonth();
+		var dd = todayDate.getDate();
+		var today = new Date(yy, mm, dd)
+
+		var oldest = new Date();
+		oldest.setDate(today.getDate() - 7);
+
+
+
+		EntryData.find({username: username, date: {"$gte":oldest, "$lt": todayDate}}, function(err, entries){
+			//console.log(entries);
+
+			var iDay = today;
+			
+						
+			while (
+				!(
+				(iDay.getFullYear() == oldest.getFullYear()) &&
+				(iDay.getMonth() == oldest.getMonth()) &&
+				(iDay.getDate() == oldest.getDate()) ) 
+				){
+
+				for (var i = entries.length - 1; i >= 0; i--) {
+					//console.log(entries[i].date);
+					if((
+						(iDay.getFullYear() == entries[i].date.getFullYear()) &&
+						(iDay.getMonth() == entries[i].date.getMonth()) &&
+						(iDay.getDate() == entries[i].date.getDate()) )
+						){
+
+						console.log(entries[i].steps+" steps on "+iDay);
+
+						dayArray.push((iDay.getMonth()+1)+"/"+iDay.getDate());
+						stepArray.push(entries[i].steps);
+					}
+				}
+
+
+
+				iDay.setDate(iDay.getDate() - 1);
+			}
+
+
+			res.render('profile', {username: username,
+								teamname: teamname,
+								days: dayArray,
+								steps: stepArray});
+
+		});
+
+
+		
+	});
 
 	return router;
 }

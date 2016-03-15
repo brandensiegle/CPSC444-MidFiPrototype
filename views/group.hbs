@@ -3,6 +3,18 @@
 <html>
 
 <head>
+
+<style>
+    body {
+        padding-top: 120px;
+    }
+    @media (max-width: 979px) {
+        body {
+            padding-top: 80px;
+        }
+    }
+</style>
+
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -85,7 +97,7 @@
     <a href="/group?date={{prevDate}}">
         <img src="/images/BackArrow.png" width="30"></img>
     </a>
-    <a href="/addData" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Update Steps</a>
+    <a href="/addData?date={{todayDate}}" class="btn btn-success" role="button"><i class="glyphicon glyphicon-plus"></i> Update Steps</a>
     <a href="/group?date={{nextDate}}">
         <img src="/images/NextArrow.png" width="30">
     </a>
@@ -159,9 +171,9 @@
 <div id="footer">
     <div class="col-xs-12 navbar-inverse navbar-fixed-bottom">
         <div class="row" id="bottomNav">
-            <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-user"></i><br>Profile</a></div>
-            <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-tasks"></i><br>Dashboard</a></div>
-            <div class="col-xs-3 text-center bg-info"><a href="/group"><i class="glyphicon glyphicon-star"></i><br>MySquads</a></div>
+            <div class="col-xs-3 text-center"><a href="/profile"><i class="glyphicon glyphicon-user"></i><br>Profile</a></div>
+            <div class="col-xs-3 text-center"><a href="#"><i class="glyphicon glyphicon-tasks"></i><br>Dashboard</a></div>
+            <div class="col-xs-3 text-center bg-info"><a href="#"><i class="glyphicon glyphicon-star"></i><br>MySquads</a></div>
             <div class="col-xs-3 text-center"><a href="/groupranking"><i class="glyphicon glyphicon-list-alt"></i><br>Leaderboard</a></div>
         </div>
     </div>

@@ -1,0 +1,117 @@
+<!doctype html>
+
+<html>
+
+<head>
+    
+
+    <!-- PROFILE CSS -->
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="The Jaguar Squad">
+	<title>SquadGoals/{{username}}</title>
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!--JQuery-->
+	<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<script type="public/javascripts" src="customjquery.js"></script>
+
+    <!-- plotly-->
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    
+
+</head>
+
+
+<!--
+	<div class="container">
+		<img src="/images/logo.jpg" class="img-responsive center-block">
+	</div>
+-->
+
+
+
+<!--
+	Top Navigation Bar
+-->
+
+
+    <nav class="navbar-inverse navbar-fixed-top" role="navigation">
+        <div id="divContainer" class="container">
+                <div class="row" id="bottomNav">
+                    <div class="col-xs-3 text-center"><a href="#"><i class="glyphicon glyphicon-cog"></i><br>Settings</a></div>
+                    <div class="col-xs-6 text-center">	<img src="/images/logobrown.png" class="img-responsive center-block"></div>
+                    <div class="col-xs-3 text-center"><a href="/logout"><i class="glyphicon glyphicon-log-out"></i><br>Log Out</a></div>
+
+
+            </div>
+        </div>
+    </nav>
+
+
+<!--
+	Profile Page
+-->
+
+<div class="profile-sidebar">
+                <!-- SIDEBAR USERPIC -->
+                <div class="profile-userpic profile-sized">
+                    <img src="/images/profPic.jpg" class="img-responsive" alt="">
+                </div>
+                <!-- END SIDEBAR USERPIC -->
+                <!-- SIDEBAR USER TITLE -->
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name">
+                       {{username}}
+                    </div>
+                    <div class="profile-usertitle-job">
+                        {{teamname}}
+                    </div>
+                </div>
+                <!-- END SIDEBAR USER TITLE -->
+                
+                <!-- SIDEBAR MENU -->
+                <div class="profile-usermenu">
+                    
+
+                </div>
+                <!-- END MENU -->
+            </div>
+            <center>
+            <div id="tester" style="width:350px;height:250px;margin-left:0px;"></div>
+            </center>
+
+                    <script>
+                        TESTER = document.getElementById('tester');
+                        Plotly.plot( TESTER, [{
+                        x: [{{#each days}}"{{this}}",{{/each}}],
+                        y: [{{steps}}] }], {
+                        margin: { t: 0 }, showlegend: false }, {staticPlot: true} );
+                    </script>
+
+
+<div id="footer">
+    <div class="col-xs-12 navbar-inverse navbar-fixed-bottom">
+        <div class="row" id="bottomNav">
+            <div class="col-xs-3 text-center bg-info"><a href="#"><i class="glyphicon glyphicon-user"></i><br>Profile</a></div>
+            <div class="col-xs-3 text-center"><a href="#"><i class="glyphicon glyphicon-tasks"></i><br>Dashboard</a></div>
+            <div class="col-xs-3 text-center"><a href="/group"><i class="glyphicon glyphicon-star"></i><br>MySquads</a></div>
+            <div class="col-xs-3 text-center"><a href="/groupranking"><i class="glyphicon glyphicon-list-alt"></i><br>Leaderboard</a></div>
+        </div>
+    </div>
+</div>
+
+</html>
