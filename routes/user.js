@@ -55,7 +55,7 @@ module.exports = function(passport){
 
 		}).remove().exec();
 
-		res.end(username);
+		res.send(username);
 	});
 
 	return userRouter;

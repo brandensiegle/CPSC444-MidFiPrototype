@@ -60,6 +60,7 @@ module.exports = function(passport){
 
 	/*POST to Login*/
 	router.post('/login', passport.authenticate('login', {
+
 			successRedirect: '/group',
 			failureRedirect: '/login',
 			failureFlash : false  
@@ -68,6 +69,8 @@ module.exports = function(passport){
 
 	/*GET logout */
 	router.get('/logout', isAuthenticated, function(req, res){
+		console.log("Log: User("+req.user.username+") has LOGGED OUT");
+
 		req.session.destroy(function (err) {
    			res.redirect('/login'); //Inside a callback… bulletproof!
   		});
@@ -100,7 +103,7 @@ module.exports = function(passport){
 router.get('/groupranking', isAuthenticated, function(req, res, next){
 	//var username = "test";
 
-	console.log(req.user);
+	console.log("Log: User("+req.user.username+") has viewed the GROUPRANKING page");
 
 	var todayDate = new Date();
 	var yy = todayDate.getFullYear();
@@ -139,8 +142,8 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 								var e = entriesForToday[i];
 
 								if(u.username == e.username){
-									console.log(e);
-									console.log(e.steps);
+									//console.log(e);
+									//console.log(e.steps);
 									totalGroupSteps = totalGroupSteps + e.steps;
 									break;
 								}
@@ -231,6 +234,8 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 /*GET groups page*/
 router.get('/group', isAuthenticated, function(req, res, next){
 	
+	console.log("Log: User("+req.user.username+") has viewed the TEAM DASHBOARD page");
+
 	if (req._parsedUrl.query != null){
 		var query = (req._parsedUrl.query).split("=");
 		if(query[0] != "date"){
@@ -268,9 +273,9 @@ router.get('/group', isAuthenticated, function(req, res, next){
 	var todayStr = selectedDate.getFullYear()+"-"+selectedDate.getMonth()+"-"+selectedDate.getDate();
 
 
-	console.log("Date Requested: " + selectedDate);
-	console.log("Yestarday: " + prevDayDate);
-	console.log("Tomorrow: " + nextDayDate);
+	//console.log("Date Requested: " + selectedDate);
+	//console.log("Yestarday: " + prevDayDate);
+	//console.log("Tomorrow: " + nextDayDate);
 	
 
 	//var username = 'test';
@@ -396,6 +401,7 @@ router.get('/group', isAuthenticated, function(req, res, next){
 router.get('/addData', isAuthenticated, function(req, res, next){
 	var addDate = "";
 
+	console.log("Log: User("+req.user.username+") is at the ADDING DATA page");
 
 	var query = (req._parsedUrl.query).split("=");
 	if(query[0] != "date"){
@@ -417,6 +423,7 @@ router.get('/addData', isAuthenticated, function(req, res, next){
 /*POST new data*/
 router.post('/addData', isAuthenticated, function(req, res, next){
 	
+
 	//var username = 'test';
 	var username = req.user.username;
 
@@ -451,12 +458,15 @@ router.post('/addData', isAuthenticated, function(req, res, next){
 	});
 
 	
-
+	console.log("Log: User("+req.user.username+") has added " + req.body.steps + " steps for " + today);
 
 	res.redirect('/group?date='+todayString);
 });
 
 	router.get('/profile', isAuthenticated, function(req, res, next){
+
+		console.log("Log: User("+req.user.username+") has viewed their PROFILE page");
+
 		var username = req.user.username;
 		var teamname = req.user.groupname;
 		var dayArray = []
@@ -494,7 +504,7 @@ router.post('/addData', isAuthenticated, function(req, res, next){
 						(iDay.getDate() == entries[i].date.getDate()) )
 						){
 
-						console.log(entries[i].steps+" steps on "+iDay);
+						//console.log(entries[i].steps+" steps on "+iDay);
 
 						dayArray.push((iDay.getMonth()+1)+"/"+iDay.getDate());
 						stepArray.push(entries[i].steps);
