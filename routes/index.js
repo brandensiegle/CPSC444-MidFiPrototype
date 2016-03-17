@@ -9,6 +9,8 @@ var EntryData = require('../models/entrydata');
 var express = require('express');
 var router = express.Router();
 
+var monthStrArray = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -272,6 +274,10 @@ router.get('/group', isAuthenticated, function(req, res, next){
 	var nextDateStr = nextDayDate.getFullYear()+"-"+nextDayDate.getMonth()+"-"+nextDayDate.getDate();
 	var todayStr = selectedDate.getFullYear()+"-"+selectedDate.getMonth()+"-"+selectedDate.getDate();
 
+	var todayDis = monthStrArray[selectedDate.getMonth()]+" "+selectedDate.getDate()+", "+selectedDate.getFullYear();
+
+
+
 
 	//console.log("Date Requested: " + selectedDate);
 	//console.log("Yestarday: " + prevDayDate);
@@ -379,7 +385,8 @@ router.get('/group', isAuthenticated, function(req, res, next){
 											otherVisible : !currentUser.memberblind,
 											prevDate : prevDateStr,
 											nextDate : nextDateStr,
-											todayDate: todayStr});
+											todayDate: todayStr,
+											todayDis: todayDis});
 
 				});
 
@@ -415,8 +422,10 @@ router.get('/addData', isAuthenticated, function(req, res, next){
 
 	addDate = yy+"-"+mm+"-"+dd;
 
+	var todayDis = monthStrArray[mm]+" "+dd+", "+yy;
 
-	res.render('adddata', {date:addDate});
+	res.render('adddata', {date:addDate,
+							todayDis: todayDis});
 });
 
 
