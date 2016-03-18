@@ -131,42 +131,53 @@ router.get('/groupranking', isAuthenticated, function(req, res, next){
 					
 					var currentGroupName = allGroups[curGroup].groupname;
 					
-					
-					User.find({groupname: currentGroupName}, function(err, usersInThis){
-						var totalGroupSteps = 0;
+					if (currentGroupName != "T-G" &&
+						currentGroupName != "T-H" &&
+						currentGroupName != "T-I" &&
+						currentGroupName != "T-J" &&
+						currentGroupName != "T-K" &&
+						currentGroupName != "T-L"){ 
 
 						
-						for (var userCounter = 0 ;userCounter < usersInThis.length; userCounter++) {
-							var u = usersInThis[userCounter];
-							
-							
-							for(var i = 0; i < entriesForToday.length; i++){
-								var e = entriesForToday[i];
+						User.find({groupname: currentGroupName}, function(err, usersInThis){
+							var totalGroupSteps = 0;
 
-								if(u.username == e.username){
-									//console.log(e);
-									//console.log(e.steps);
-									totalGroupSteps = totalGroupSteps + e.steps;
-									break;
+							
+							for (var userCounter = 0 ;userCounter < usersInThis.length; userCounter++) {
+								var u = usersInThis[userCounter];
+								
+								
+								for(var i = 0; i < entriesForToday.length; i++){
+									var e = entriesForToday[i];
+
+									if(u.username == e.username){
+										//console.log(e);
+										//console.log(e.steps);
+										totalGroupSteps = totalGroupSteps + e.steps;
+										break;
+									}
 								}
+								
+							}
+
+
+							if(req.user.groupname == currentGroupName){
+								groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+								thisGroupOnlyStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
+							} else{
+								groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: false});
 							}
 							
-						}
 
+							curGroup++;
+							searchThroughGroups();
+						});
 
-						if(req.user.groupname == currentGroupName){
-							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
-							thisGroupOnlyStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: true});
-						} else{
-							groupStats.push({groupname: currentGroupName, totalSteps: totalGroupSteps, offColour: false});
-						}
-						
-
+					}
+					else {
 						curGroup++;
 						searchThroughGroups();
-					});
-
-					
+					}
 					
 
 					
