@@ -49,6 +49,20 @@ function deleteUser(username){
 
 </table>
 
+<div>
+View Breakdown<br>
+<table>
+{{each userlist}}
+	<tr>
+	<td>{{this.username}}
+	</td>
+	{{each this.entrys}}
+		<td>{{this.steps}}</td>
+	{{/each}}
+	</tr>
+{{/each}}
+</table>
+</div>
 
 <br><br>
 <!-- Register Users-->

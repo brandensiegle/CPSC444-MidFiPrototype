@@ -1,0 +1,15 @@
+<table>
+{{#each entries}}
+	{{this}}<br>
+{{/each}}
+
+{{#each userlist}}
+	<tr>
+	<td>{{this.username}}
+	</td>
+	{{#each this.entrys}}
+		<td>{{this.steps}}</td>
+	{{/each}}
+	</tr>
+{{/each}}
+</table>

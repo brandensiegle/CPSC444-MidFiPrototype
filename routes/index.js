@@ -99,7 +99,56 @@ module.exports = function(passport){
 	});
 
 
+router.get('/steptable', function(req, res, next){
+	console.log("ENTER");
+	var startDate = new Date(2016, 02, 14);
+	var endDate = new Date();
 
+	var userlist = [];
+
+	var allentries = [];
+
+	User.find({}, function(err, allUsers){
+		console.log("FINDING USERS");
+		var i = 0;
+
+		function getDataForUsers(){
+			EntryData.find({
+						username: allUsers[i].username, 
+						date: {
+        					$gte: startDate,
+        					$lt: endDate
+    					}
+					}, function(err, entries){
+						allentries.push("FINDING ENTRIES FOR: " + allUsers[i].username + "\n");
+
+						for (var q = 0; q < entries.length; q++ ){
+							allentries.push(allUsers[i].username + " : steps --> " + entries[q].steps + " : date -> " + entries[q].date + "\n");
+
+
+						}
+				
+
+
+				//userlist.push({allUsers[i].username, entriesByDay});
+				i++;
+				if (i == allUsers.length){
+					res.render('stepTable', {entries: allentries});
+
+				} else{
+					getDataForUsers();
+				}
+				
+			});
+
+		}
+
+		getDataForUsers();
+		
+	});
+
+	
+});
 
 /*GET groupranking page*/
 router.get('/groupranking', isAuthenticated, function(req, res, next){
